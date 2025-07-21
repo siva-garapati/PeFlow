@@ -1,0 +1,92 @@
+.transaction-stats{
+    display: flex;
+    flex-direction: column;
+    /* background-color: rgb(255, 255, 255); */
+    padding-top: 14px;
+}
+
+.transactions-period{
+    width: 90%;
+    padding: 10px 20px 6px 60px;
+    border-bottom: 1px solid;
+    border-bottom-left-radius: 10px;
+    display: flex;
+    gap: 30px;
+    margin: 0px 0px 30px 0px;
+    align-items: center;
+}
+
+.transactions-period .svg-icon{
+    /* background-color: #c7e7ff; */
+    padding: 5px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.transactions-period .text h3 {
+    font-size: 12px;
+    font-weight: 500;
+    /* color: rgba(255, 255, 255, 0.8); */
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 4px 0;
+}
+
+.transactions-period .text p {
+    font-size: 18px;
+    font-weight: bold;
+    /* color: white; */
+    margin: 0;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 26px;
+}
+
+@media (min-width: 768px) {
+    .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.stat-card {
+    height: 130px;
+    overflow: hidden;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    background: rgba(248, 250, 252, 0.5);
+    border-radius: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    align-content: center;
+}
+
+.stat-card:hover {
+    background: rgba(238, 246, 255, 0.8);
+    transform: scale(1.02);
+    color: black;
+}
+
+.stat-text h4 {
+    font-size: 11px;
+    font-weight: 500;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 4px 0;
+}
+
+.stat-text p {
+    font-size: 32px;
+    font-weight: bold;
+    color: #1e293b;
+    margin: 0;
+    transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    word-break: break-word;
+    white-space: normal;
+}
+
+.stat-card:hover .stat-text p {
+    color: #0ea5e9;
+}
