@@ -10,7 +10,7 @@ let app=express()
 app.use(express.json())
 
 app.use(cors({
-    origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173', // your frontend domain
+    origin: 'http://localhost:5173', // your frontend domain
     credentials: true
 }));
 
