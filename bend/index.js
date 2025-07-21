@@ -9,7 +9,10 @@ let app=express()
 
 app.use(express.json())
 
-app.use(cors())
+app.use(cors({
+    origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173', // your frontend domain
+    credentials: true
+}));
 
 app.get('/',(req,res)=>{
     res.send("Yup, it's working")
