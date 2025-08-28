@@ -1,69 +1,85 @@
 .upload-section {
-    width: 94vw;
-    margin: 40px auto;
-    padding: 30px 10px;
+    max-width: 700px;
+    margin: 0 auto;
     background: #ffffff;
+    padding: 2rem;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    color: #333;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid;
     font-family: 'Segoe UI', sans-serif;
-    border: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
 }
 
 .upload-section h2 {
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+    color: #333;
     text-align: center;
-    margin-bottom: 20px;
-    font-size: 1.2em;
-    color: #222;
 }
 
-.file-input {
-    width: 35%;
-    display: block;
-    margin: 0 auto 20px;
-    padding: 10px 14px;
-    border-radius: 6px;
-    background-color: #f9f9f9;
-    color: #333;
-    border: 1px solid #ccc;
-    cursor: pointer;
+.file-input-zone {
+    transition: background 0.3s ease, border-color 0.3s ease;
 }
 
-.file-input::-webkit-file-upload-button {
-    background-color: #e0e0e0;
-    color: #333;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 6px;
-    cursor: pointer;
+.drag-active {
+    background-color: #e6f6ff !important;
+    border-color: #00bcd4 !important;
 }
 
-.upload-btn {
-    padding: 10px 20px;
-    border: none;
-    background-color: #1976d2;
-    color: white;
-    border-radius: 6px;
-    cursor: pointer;
+.file-upload-placeholder .upload-message {
     font-size: 16px;
-    transition: background 0.3s;
-}
-
-.upload-btn:hover {
-    background-color: #1565c0;
-}
-
-.status {
-    margin-top: 15px;
-    font-size: 14px;
+    font-weight: 500;
     color: #555;
 }
 
-.status.loading {
-    color: #b16a00;
+.file-upload-placeholder {
+    color: #999;
 }
 
-.file-input:hover {
-    border-color: #96b6d6;
+.file-input-zone.loading {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.selected-file-preview p {
+    margin: 0;
+    color: #444;
+}
+
+.upload-btn {
+    background-color: #512da8;
+    color: #fff;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+    margin-top: 1rem;
+}
+
+.upload-btn:hover:enabled {
+    background-color: #4527a0;
+}
+
+.upload-btn:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+}
+
+.status {
+    font-size: 0.95rem;
+    margin-top: 1rem;
+    text-align: center;
+    color: #333;
+}
+
+.status.error {
+    color: #e53935;
+}
+
+.status.loading {
+    color: #0277bd;
 }

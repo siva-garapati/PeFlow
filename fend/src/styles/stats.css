@@ -6,7 +6,7 @@
 }
 
 .transactions-period{
-    width: 90%;
+    width: 100%;
     padding: 10px 20px 6px 60px;
     border-bottom: 1px solid;
     border-bottom-left-radius: 10px;
@@ -48,6 +48,67 @@
 @media (min-width: 768px) {
     .stats-grid {
         grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* 2 columns by default */
+    gap: 26px;
+}
+
+@media (max-width: 400px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (min-width: 768px) {
+    .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Responsive text sizing for smaller windows */
+@media (max-width: 600px) {
+    .stat-text p {
+        font-size: 22px;
+        /* smaller main number text */
+    }
+
+    .stat-text h4 {
+        font-size: 9px;
+        /* smaller title text */
+    }
+
+    .transactions-period .text h3 {
+        font-size: 10px;
+        /* smaller period title */
+    }
+
+    .transactions-period .text p {
+        font-size: 16px;
+        /* smaller period value text */
+    }
+}
+
+@media (max-width: 400px) {
+    .stat-text p {
+        font-size: 18px;
+        /* even smaller on very small screens */
+    }
+
+    .stat-text h4 {
+        font-size: 8px;
+    }
+
+    .transactions-period .text h3 {
+        font-size: 9px;
+    }
+
+    .transactions-period .text p {
+        font-size: 14px;
     }
 }
 
