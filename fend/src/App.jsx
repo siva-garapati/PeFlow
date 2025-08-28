@@ -2,10 +2,6 @@ import React, { useState } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Nav from './components/Nav'
 import Insights from './pages/Insights'
-// import LandingPage from './pages/LandingPage'
-import UploadForm from './components/UploadForm'
-import HowItWorks from './components/Howitworks'
-import Privacy from './components/Privacy'
 import LandingPage from './pages/LandingPage'
 
 const App = () => {
