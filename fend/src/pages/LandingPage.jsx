@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import UploadForm from '../components/UploadForm'
-import HowItWorks from '../components/HowItworks'
+import HowItWorks from '../components/HowItWorks'
 import Privacy from '../components/Privacy'
 
 const LandingPage = ({ setData }) => {
