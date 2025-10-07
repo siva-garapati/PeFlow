@@ -74,7 +74,7 @@ const UploadForm = ({ setData }) => {
             formData.append("file", file);
 
             const res = await axios.post(
-                `${import.meta.env.VITE_API_URL}/parse`,
+                `${import.meta.env.VITE_BEND_URL}/parse`,
                 formData
             );
 

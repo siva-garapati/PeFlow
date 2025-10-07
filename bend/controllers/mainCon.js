@@ -1,7 +1,6 @@
 const multer = require("multer")
 const pdf = require('pdf-parse');
 
-
 let upload = multer()
 
 function parseTransactionBlock(block) {

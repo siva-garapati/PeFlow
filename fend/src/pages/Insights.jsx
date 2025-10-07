@@ -14,7 +14,7 @@ const Insights = ({ data }) => {
     if (!data) {
       navigate('/');
     }
-  },[])
+  },[data, navigate])
 
   // let top5CD = (data, key) => {
   //     return (
