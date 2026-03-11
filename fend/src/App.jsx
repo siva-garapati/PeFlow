@@ -59,7 +59,8 @@ const App = () => {
 
             <span>
               Developed with ❤️ by {" "}
-              <span className="font-semibold text-[#5A2DAF]">Siva Garapati</span>
+              <span className="font-semibold text-[#5A2DAF]">Siva Garapati</span> &
+              <span className="font-semibold text-[#5A2DAF]"> Pratik Jadhav</span>
             </span>
           </p>
         </footer>
