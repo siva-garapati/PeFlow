@@ -5,16 +5,17 @@ import Stats from '../components/Stats'
 import MonthlyCharts from '../charts/MonthlyChart'
 import ContactChart from '../charts/ContactChart'
 import Top5CDChart from '../charts/Top5CDChart'
+import WeeklyTransactionGraph from '../charts/WeeklyTransactionGraph'
 
 const Insights = ({ data }) => {
 
   let navigate = useNavigate();
 
-  useEffect(()=>{
+  useEffect(() => {
     if (!data) {
       navigate('/');
     }
-  },[data, navigate])
+  }, [data, navigate])
 
   // let top5CD = (data, key) => {
   //     return (
@@ -56,15 +57,32 @@ const Insights = ({ data }) => {
             <Upload className="w-5 h-5" />
           </Link>
         </div>
-        <Stats data={data?.stats}/>
-        <div className='my-5 sm:my-6 md:my-8 lg:my-10 xl:my-14'>
+        <Stats data={data?.stats} pdfType={data?.pdfType} />
+
+
+        {/* monthly cash in and out */}
+        {data?.pdfType === "normal" && <div className='my-5 sm:my-6 md:my-8 lg:my-10 xl:my-14'>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
             Monthly Cash In & Out
           </h1>
           <div className='my-5 sm:mt-8 h-68 sm:h-80 lg:h-96'>
             <MonthlyCharts data={data?.groupings?.month} />
+            {/* <WeeklyTransactionChart transactions={data?.transactions} /> */}
           </div>
-        </div>
+        </div>}
+
+        {/* Weekly cash in and out */}
+        {data?.pdfType === "secure" && <div className='my-5 sm:my-6 md:my-8 lg:my-10 xl:my-14'>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
+            Weekly Cash In & Out
+          </h1>
+          <div className='my-5 sm:mt-8 h-104 sm:h-92 lg:h-96'>
+            <WeeklyTransactionGraph transactions={data?.transactions} />
+          </div>
+        </div>}
+
+
+
         {/* //top contacts by spend and receive */}
         {/* <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 my-5 sm:my-6 md:my-8 lg:my-10 xl:my-14'>
           <div>
@@ -84,6 +102,8 @@ const Insights = ({ data }) => {
             </div>
           </div>
         </div> */}
+
+        {/* contact-wise cash in and out */}
         <div className='my-5 sm:my-6 md:my-8 lg:my-10 xl:my-14'>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
             Contact-wise Cash In & Out

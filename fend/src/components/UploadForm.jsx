@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import axios from "axios";
-import { Upload, FileText, X, Info } from "lucide-react";
+import { Upload, FileText, X, Info, Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
@@ -13,6 +13,13 @@ const UploadForm = ({ setData }) => {
         loading: false,
     });
     const fileInputRef = useRef(null);
+    const [pdfType, setPdfType] = useState({
+        type: "normal",
+        password: "",
+        checked: false,
+        bankType: ""
+    });
+    const [showPassword, setShowPassword] = useState(false);
 
     // Drag events
     const handleDrag = (e) => {
@@ -68,20 +75,43 @@ const UploadForm = ({ setData }) => {
             return;
         }
 
+        if (pdfType.type === "secure" && !pdfType.password) {
+            setStatus((s) => ({ ...s, msg: "Password is required for secure PDF." }));
+            return;
+        }
+
         setStatus((s) => ({ ...s, loading: true, msg: "" }));
         setData("");
 
         try {
             const formData = new FormData();
             formData.append("file", file);
+            pdfType.password && formData.append("pdfPassword", pdfType.password);
+            pdfType.type === "secure" && formData.append("bankType", pdfType.bankType);
 
-            const res = await axios.post(`${import.meta.env.VITE_API_URL}/parse`, formData);
+            console.log(formData);
+            console.log(pdfType);
+            let res;
+
+            if (pdfType.type === "normal") {
+                //for normal pdfs
+                res = await axios.post(`${import.meta.env.VITE_API_URL}/parse`, formData);
+                // res = await axios.post(`http://localhost:5000/parse`, formData);
+
+            }
+            else {
+                //for secure pdfs
+                // res = await axios.post(`http://localhost:5000/secure/parse-secure`, formData);
+                res = await axios.post(`${import.meta.env.VITE_API_URL}/secure/parse-secure`, formData);
+            }
+
 
             if (!res.data.success || res.data?.transactions?.length === 0) {
                 setStatus((s) => ({ ...s, msg: "No data in the file" }));
             } else {
                 setData(res.data);
                 // ✅ Clear only on success
+                console.log(res.data);
 
                 setFile(null);
                 if (fileInputRef.current) {
@@ -89,9 +119,9 @@ const UploadForm = ({ setData }) => {
                 }
                 navigate('/insights'); // Navigate to insights page
             }
-        } catch(err) {
+        } catch (err) {
             toast.error(err?.response?.data?.message || err.message)
-            setStatus((s) => ({ ...s, msg: err?.response?.data?.message || err.message}));
+            setStatus((s) => ({ ...s, msg: err?.response?.data?.message || err.message }));
         } finally {
             setStatus((s) => ({ ...s, loading: false }));
         }
@@ -103,71 +133,115 @@ const UploadForm = ({ setData }) => {
             <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 mb-5 text-center">
                 Upload your Transactions PDF
             </h2>
+            <h3 className="text-sm sm:text-md md:text-lg font-semibold text-gray-800 mb-1 text-center">select pdf type</h3>
+            <div className="flex items-center gap-2 sm:gap-3 pb-2">
+                <input type="radio" name="pdfType" id="phonepay" value="normal" onChange={(e) => {
+                    // console.log(e.target.value)
+                    setPdfType({ ...pdfType, checked: true, type: e.target.value, bankType: "NORMAL" })
+                }} />
+                <label htmlFor="phonepay">Phonepay</label>
+                <input type="radio" name="pdfType" id="AXIS" value="secure" onChange={(e) => {
+                    // console.log(e.target.value)
+                    setPdfType({ ...pdfType, checked: true, type: e.target.value, bankType: "AXIS" })
+                }} />
+                <label htmlFor="AXIS">Axis Bank</label>
+                <input type="radio" name="pdfType" id="SBI" value="secure" onChange={(e) => {
+                    // console.log(e.target.value)
+                    setPdfType({ ...pdfType, checked: true, type: e.target.value, bankType: "SBI" })
+                }} />
+                <label htmlFor="SBI">SBI</label>
+
+            </div>
+
 
             {/* Drag/Drop and Browse zone */}
-            <div
-                className={`relative border-2 border-dashed rounded-xl p-3 sm:p-8 mb-6 transition
+            {
+                pdfType.checked && <div
+                    className={`relative border-2 border-dashed rounded-xl p-3 sm:p-8 mb-6 transition
           ${dragActive ? "bg-blue-50 border-blue-400" : "bg-gray-50 border-gray-200"}
           ${!file && "hover:bg-gray-100 hover:border-gray-400"}
           ${status.loading ? "opacity-60 cursor-not-allowed" : "cursor-pointer"}`}
-                onDragEnter={handleDrag}
-                onDragLeave={handleDrag}
-                onDragOver={handleDrag}
-                onDrop={handleDrop}
-            >
-                <input
-                    type="file"
-                    onChange={handleFile}
-                    accept="application/pdf"
-                    className={`absolute inset-0 opacity-0 w-full h-full
-                        ${status.loading ? "cursor-not-allowed" : "cursor-pointer"}`}
-                    disabled={status.loading}
-                    ref={fileInputRef}
-                />
+                    onDragEnter={handleDrag}
+                    onDragLeave={handleDrag}
+                    onDragOver={handleDrag}
+                    onDrop={handleDrop}
+                >
+                    <input
+                        type="file"
+                        onChange={handleFile}
 
-                {file ? (
-                    <div className="flex items-center justify-between bg-gray-100 rounded-lg px-1 sm:px-4 py-3 overflow-hidden">
-                        <div className="flex items-center gap-2 sm:gap-3">
-                            <FileText className="text-purple-700 w-5 h-5 sm:w-7 sm:h-7 lg:w-8 lg:h-8" size={28} />
-                            <div>
-                                <p className="font-medium text-gray-800 text-sm sm:text-base truncate max-w-[200px] sm:max-w-[280px]">
-                                    {file.name}
-                                </p>
-                                <p className="text-xs sm:text-sm text-gray-500">
-                                    {(file.size / 1024 / 1024).toFixed(2)} MB
-                                </p>
+                        accept="application/pdf"
+                        className={`absolute inset-0 opacity-0 w-full h-full
+                        ${status.loading ? "cursor-not-allowed" : "cursor-pointer"}`}
+                        disabled={status.loading}
+                        ref={fileInputRef}
+                    />
+                    {file ? (
+                        <div className="flex items-center justify-between bg-gray-100 rounded-lg px-1 sm:px-4 py-3 overflow-hidden">
+                            <div className="flex items-center gap-2 sm:gap-3">
+                                <FileText className="text-purple-700 w-5 h-5 sm:w-7 sm:h-7 lg:w-8 lg:h-8" size={28} />
+                                <div>
+                                    <p className="font-medium text-gray-800 text-sm sm:text-base truncate max-w-[200px] sm:max-w-[280px]">
+                                        {file.name}
+                                    </p>
+                                    <p className="text-xs sm:text-sm text-gray-500">
+                                        {(file.size / 1024 / 1024).toFixed(2)} MB
+                                    </p>
+                                </div>
                             </div>
-                        </div>
-                        <button
-                            type="button"
-                            className={`text-red-500 hover:text-red-600 z-10
+                            <button
+                                type="button"
+                                className={`text-red-500 hover:text-red-600 z-10
                                     ${status.loading ? "cursor-not-allowed" : "cursor-pointer"}`}
-                            onClick={removeFile}
-                            disabled={status.loading}
-                        >
-                            <X size={20} />
-                        </button>
-                    </div>
-                ) : (
-                    <div className="text-center">
-                        <Upload size={40} className="mx-auto text-gray-400 mb-3" />
+                                onClick={removeFile}
+                                disabled={status.loading}
+                            >
+                                <X size={20} />
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="text-center">
+                            <Upload size={40} className="mx-auto text-gray-400 mb-3" />
                             <p className="font-medium text-[#7c48dc] text-sm sm:text-base">
-                            Drop your PDF here or click to browse
-                        </p>
-                        <p className="text-xs text-gray-500">Only PDF files are supported</p>
-                    </div>
-                )}
-            </div>
+                                Drop your PDF here or click to browse
+                            </p>
+                            <p className="text-xs text-gray-500">Only PDF files are supported</p>
+                        </div>
+                    )}
+                </div>
+            }
 
             {file && (
-                <button
-                    onClick={handleSubmit}
-                    disabled={status.loading || !file}
-                    className="w-full bg-[#5A2DAF] text-white py-2 sm:py-2.5 rounded-lg font-semibold hover:bg-purple-800 transition disabled:opacity-50 text-sm sm:text-base cursor-pointer"
-                >
-                    {status.loading ? "Analyzing..." : "Analyze Statements"}
-                </button>
+                <div>
+                    {pdfType.type === "secure" && <div className="flex items-center justify-center sm:gap-3 mb-4 sm:plr-8 relative max-w-xs mx-auto">
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            name="pdfPassword"
+                            id=""
+                            placeholder="Enter Password"
+                            className="w-full pl-3 pr-6 py-2 border outline-2 outline-gray-300 rounded-lg focus:outline-black focus:outline-2"
+                            onChange={(e) => setPdfType({ ...pdfType, password: e.target.value })}
+                            required
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 cursor-pointer"
+                        >
+                            {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
+                        </button>
+                    </div>}
+
+                    <button
+                        onClick={handleSubmit}
+                        disabled={status.loading || !file}
+                        className="w-full bg-[#5A2DAF] text-white py-2 sm:py-2.5 rounded-lg font-semibold hover:bg-purple-800 transition disabled:opacity-50 text-sm sm:text-base cursor-pointer"
+                    >
+                        {status.loading ? "Analyzing..." : "Analyze Statements"}
+                    </button>
+                </div>
             )}
+
 
             {status.msg && (
                 <p className="mt-3 flex items-start gap-1 text-sm text-red-600">
